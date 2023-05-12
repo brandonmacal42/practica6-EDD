@@ -34,6 +34,20 @@ public class Prueba {
         }
     }
 
+    public static String itemize(final Iterable it) {
+        int i = 1;
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Selecciona una opcion.\n");
+        for (final Object obj : it) {
+            sb.append(i++);
+            sb.append(".");
+            sb.append(obj.toString());
+            sb.append(".\n");
+        }
+        sb.append("0. Salir\n");
+        return sb.toString();
+    }
+
     public static String getLine(String msg) {
         Scanner scn = new Scanner(System.in);
 
@@ -57,12 +71,6 @@ public class Prueba {
 
     public static void main(String[] args) throws IOException {
         Colors.println(Colors.HIGH_INTENSITY + Colors.BLUE, "Este es un programa sobre un buscador de ciudades");
-
-        try {
-            ReaderWriter.readLines("toSend/ciudades.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         Scanner sc = new Scanner(System.in);
         int opcion = 0, coordenadaX = 0, coordenadaY = 0;
@@ -125,22 +133,51 @@ public class Prueba {
                     continue;
 
                 case 2:
+                    ArbolBinario<?> tree = buscador.getCiudades();
+                    opcion = getInt(itemize(tree), "Por favor ingresa una opcion valida.", 0, tree.size());
+                    if (opcion != 0) {
+                        buscador.borrar(opcion - 1);
+                        continue;
+                    }
+                    opcion = -1;
+                    continue;
 
-                    break;
                 case 3:
-
-                    break;
+                    tree = buscador.getEstados();
+                    opcion = getInt(itemize(tree), "Porfavor ingresa una opcion valida", 0, tree.size());
+                    if (opcion != 0) {
+                        tree = buscador.searchEstados(opcion - 1);
+                        println("Las ciudades encontradas son: ", tree);
+                        continue;
+                    }
+                    opcion = -1;
+                    continue;
                 case 4:
-                    break;
+                    final int minX = buscador.minX();
+                    final int minY = buscador.minY();
+                    final int maxX = buscador.maxX();
+                    final int maxY = buscador.maxY();
+                    System.out.println("Ingresa la coordenada x1");
+                    int x1 = sc.nextInt();
+                    System.out.println("Ingresa la coordenada x2");
+                    int x2 = sc.nextInt();
+                    System.out.println("Ingresa la coordenada y1");
+                    int y1 = sc.nextInt();
+
+                    System.out.println("Ingresa la coordenada y2");
+                    int y2 = sc.nextInt();
+
+                    tree = buscador.searchCoordenadas(x1, x2, y1, y2);
+                    println("Las ciudades encontradas son: ", tree);
+                    continue;
                 case 5:
-                
-                println("Las ciudades dentro del directorio son: ", buscador.getCiudades());
-                continue;
+                    println("Las ciudades dentro del directorio son: ", buscador.getCiudades());
+                    continue;
                 default:
                     System.out.println("Ingresa una opcion valida.");
                     break;
             }
-        } while (opcion != 5);
+        } while (opcion != 0);
 
     }
 }

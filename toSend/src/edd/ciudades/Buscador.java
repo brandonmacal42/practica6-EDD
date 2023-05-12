@@ -6,8 +6,7 @@ import java.io.IOException;
 import edd.readerwriter.ReaderWriter;
 import edd.estructuras.arboles.ArbolBinario;
 
-public class Buscador
-{
+public class Buscador {
     private static String fileName;
     private ArbolBinario<Ciudad> ciudades;
     private ArbolBinario<String> estados;
@@ -15,7 +14,7 @@ public class Buscador
     private int maxX;
     private int minY;
     private int maxY;
-    
+
     public Buscador() {
         this.ciudades = new ArbolBinario<Ciudad>();
         this.estados = new ArbolBinario<String>();
@@ -27,23 +26,22 @@ public class Buscador
         this.maxX = n2;
         this.load(Buscador.fileName);
     }
-    
+
     private void load(final String c) {
         try {
             final List<String> l = ReaderWriter.readLines(c);
             for (final String s : l) {
                 this.add(new Ciudad(s), false);
             }
-        }
-        catch (IOException e) {
-			e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    
+
     public void add(final Ciudad c) {
         this.add(c, true);
     }
-    
+
     private void add(final Ciudad c, final boolean addToFile) {
         if (!this.ciudades.contains(c)) {
             this.ciudades.add(c);
@@ -68,14 +66,13 @@ public class Buscador
             if (addToFile) {
                 try {
                     ReaderWriter.writeLines(Buscador.fileName, this.ciudades);
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
-    
+
     public void borrar(final int opcion) {
         int i = 0;
         for (final Ciudad c : this.ciudades) {
@@ -87,12 +84,11 @@ public class Buscador
         }
         try {
             ReaderWriter.writeLines(Buscador.fileName, this.ciudades);
-        }
-        catch (IOException e) {
-          e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    
+
     public ArbolBinario<Ciudad> searchEstados(final int opcion) {
         int i = 0;
         boolean flag = false;
@@ -103,8 +99,7 @@ public class Buscador
                     if (c.sameEstado(e)) {
                         a.add(c);
                         flag = true;
-                    }
-                    else {
+                    } else {
                         if (flag) {
                             break;
                         }
@@ -116,7 +111,7 @@ public class Buscador
         }
         return a;
     }
-    
+
     public ArbolBinario<Ciudad> searchCoordenadas(final int x1, final int x2, final int y1, final int y2) {
         final ArbolBinario<Ciudad> a = new ArbolBinario<Ciudad>();
         for (final Ciudad c : this.ciudades) {
@@ -128,33 +123,33 @@ public class Buscador
         }
         return a;
     }
-    
+
     public ArbolBinario<Ciudad> getCiudades() {
         return this.ciudades;
     }
-    
+
     public ArbolBinario<String> getEstados() {
         return this.estados;
     }
-    
+
     public int minX() {
         return this.minX;
     }
-    
+
     public int maxX() {
         return this.maxX;
     }
-    
+
     public int minY() {
         return this.minY;
     }
-    
+
     public int maxY() {
         return this.maxY;
     }
-    
+
     static {
-        Buscador.fileName = "ciudades.txt";
-    
-}
+        Buscador.fileName = "toSend/ciudades.txt";
+
+    }
 }

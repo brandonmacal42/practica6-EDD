@@ -41,7 +41,7 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
     }
 
     public Iterator<C> iterator() {
-        throw new UnsupportedOperationException("Metodo sin implementar.");
+        return new InOrder();
     }
 
     @Override
@@ -52,7 +52,8 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
         sb.append("[");
         while (it.hasNext()) {
             sb.append(it.next());
-            if (it.hasNext()) sb.append(" ");
+            if (it.hasNext())
+                sb.append(" ");
         }
         sb.append("]");
 
@@ -81,7 +82,7 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
                     aux = node.left.max();
                     node.elem = aux.elem;
                     remove(aux);
-                } else if(node.right != null) {
+                } else if (node.right != null) {
                     aux = node.right.min();
                     node.elem = aux.elem;
                     remove(aux);
@@ -203,8 +204,10 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
         int getGrade() {
             int i = 0;
 
-            if (left != null) i++;
-            if (right != null) i++;
+            if (left != null)
+                i++;
+            if (right != null)
+                i++;
 
             return i;
         }
@@ -246,7 +249,7 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
 
             node = this;
 
-            while(node.left != null) {
+            while (node.left != null) {
                 node = node.left;
             }
 
@@ -258,7 +261,7 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
 
             node = this;
 
-            while(node.right != null) {
+            while (node.right != null) {
                 node = node.right;
             }
 
@@ -267,6 +270,48 @@ public class ArbolBinario<C extends Comparable> implements Iterable<C> {
 
         public String toString() {
             return "<" + elem + ">";
+        }
+    }
+
+    class InOrder implements Iterator<C> {
+        ArrayList<Node<C>> stack;
+
+        public InOrder() {
+            this.stack = new ArrayList<Node<C>>();
+            if (ArbolBinario.this.root != null) {
+                this.stack.add(0, ArbolBinario.this.root);
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !this.stack.isEmpty();
+        }
+
+        @Override
+        public C next() {
+            if (!this.hasNext()) {
+                throw new NoSuchElementException();
+            }
+            final Node<C> node = this.stack.remove(0);
+            if (node.isLeaf()) {
+                return node.elem;
+            }
+            if (node.right != null) {
+                this.stack.add(0, node.right);
+            }
+            final Node<C> aux = new Node<C>();
+            aux.elem = node.elem;
+            this.stack.add(0, aux);
+            if (node.left != null) {
+                this.stack.add(0, node.left);
+            }
+            return this.next();
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Metodo sin implementar.");
         }
     }
 }
